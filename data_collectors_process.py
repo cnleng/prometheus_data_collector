@@ -22,6 +22,7 @@ class DataCollectorsProcess():
         self._host = None
         self._metric = None
         self._parameters = None
+        self._path = None
         
     def _get_url(self, host, query, metric, parameters):
         """
@@ -50,7 +51,7 @@ class DataCollectorsProcess():
             now = datetime.datetime.now()
             date_time = "{}".format(now.strftime("%m-%d-%Y,%H:%M:%S"))
             #csv_file_name = result['metric']['__name__'] + '-' + result['metric']['instance'] + '-' + date_time '.csv'
-            csv_file_name = "{}-{}-{}.csv".format(result['metric']['__name__'], result['metric']['instance'], date_time) 
+            csv_file_name = "{}{}-{}-{}.csv".format(self._path, result['metric']['__name__'], result['metric']['instance'], date_time) 
             values = result['values']
             with open(csv_file_name, 'w', newline='') as csv_file:
                  csv_writer = csv.writer(csv_file)
@@ -94,3 +95,9 @@ class DataCollectorsProcess():
         Set metric name to collect
         """
         self._metric = metric
+
+    def set_dir(self, path)
+        """
+        Set path to save output
+        """
+        self._path = path
