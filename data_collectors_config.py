@@ -42,7 +42,7 @@ def parse_cli():
     optional = argparser.add_argument_group('Optional arguments')
     required.add_argument('--host', help="Specifies promotheus host ip or name")
     optional.add_argument('--path', help="Specifies directory to save output",  nargs='?', const='./', default='./')
-    optional.add_argument('--metric', help="Specifies metric name")
+    required.add_argument('--metric', help="Specifies metric name")
     optional.add_argument('--start', help="Specifies query start time")
     optional.add_argument('--end', help="Specifies query end time")
     optional.add_argument('--time', help="Specifies query time")
@@ -72,6 +72,7 @@ def configure_process(daemon, args):
     """
     daemon.set_host(args.host)
     daemon.set_path(args.path)
+    daemon.set_metric(args.metric)
     #_configure_prometheus_client(daemon, args)
     #_configure_metric_names(daemon, args)
     #_print_stat_groups(daemon)

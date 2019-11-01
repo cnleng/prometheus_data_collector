@@ -51,13 +51,18 @@ class DataCollectorsProcess():
             now = datetime.datetime.now()
             date_time = "{}".format(now.strftime("%m-%d-%Y,%H:%M:%S"))
             #csv_file_name = result['metric']['__name__'] + '-' + result['metric']['instance'] + '-' + date_time '.csv'
-            csv_file_name = "{}{}-{}-{}.csv".format(self._path, result['metric']['__name__'], result['metric']['instance'], date_time) 
+            csv_file_name = "{}{}-{}-{}.csv".format(self._path, self._metric, result['metric']['instance'], date_time) 
+            metric_keys = result['metric'].keys()
+            metric_values = []
+            for key in metric_keys:
+                metric_values.append(result['metric'][key])
             values = result['values']
+            header = ['Timestamp','Value'].extend(metric_keys)
             with open(csv_file_name, 'w', newline='') as csv_file:
                  csv_writer = csv.writer(csv_file)
-                 csv_writer.writerow(['TimeStamp','Value'])
+                 csv_writer.writerow(header)
                  for value in values:
-                     csv_writer.writerow(value)
+                    csv_writer.writerow(value.extend(metric_values))
        
         
 
@@ -96,7 +101,7 @@ class DataCollectorsProcess():
         """
         self._metric = metric
 
-    def set_dir(self, path)
+    def set_path(self, path):
         """
         Set path to save output
         """

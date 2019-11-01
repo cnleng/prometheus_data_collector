@@ -11,7 +11,7 @@ def main():
     # validate the pid_file arg and get the full path to it.
     collector = DataCollectorsProcess()
 
-    if args.host is None:
+    if args.host is None or args.metric is None:
         print >> sys.stderr, "Invalid arguments, Check usage : python data_collectors.py -h"
         sys.exit(1)
     else:
