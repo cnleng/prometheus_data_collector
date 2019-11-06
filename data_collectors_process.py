@@ -1,4 +1,5 @@
 from ast import literal_eval
+import os
 import logging
 import time
 import urllib3.exceptions
@@ -49,20 +50,24 @@ class DataCollectorsProcess():
         # gets all keys and discard __name__
         for result in results:
             now = datetime.datetime.now()
-            date_time = "{}".format(now.strftime("%m-%d-%Y,%H:%M:%S"))
-            #csv_file_name = result['metric']['__name__'] + '-' + result['metric']['instance'] + '-' + date_time '.csv'
-            csv_file_name = "{}{}-{}-{}.csv".format(self._path, self._metric, result['metric']['instance'], date_time) 
-            metric_keys = result['metric'].keys()
-            metric_values = []
-            for key in metric_keys:
-                metric_values.append(result['metric'][key])
-            values = result['values']
-            header = ['Timestamp','Value'].extend(metric_keys)
+            date_time = "{}".format(now.strftime("%m-%d-%Y-%H:%M:%S"))
+            if 'instance' in result['metric']:
+                csv_file_name = "{}{}-{}-{}.csv".format(self._path, self._metric, result['metric']['instance'], date_time) 
+            else:
+               csv_file_name = "{}{}-{}.csv".format(self._path, self._metric, date_time)
+            values = []
+            if 'values' in result:
+                 values = result['values']
+            if 'value' in result:
+                 values.append(result['value'])
+                 
+            header = ['Timestamp','Value']
+            os.makedirs(os.path.dirname(csv_file_name), exist_ok=True)
             with open(csv_file_name, 'w', newline='') as csv_file:
                  csv_writer = csv.writer(csv_file)
                  csv_writer.writerow(header)
                  for value in values:
-                    csv_writer.writerow(value.extend(metric_values))
+                    csv_writer.writerow(value)
        
         
 
